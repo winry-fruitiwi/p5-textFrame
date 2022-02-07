@@ -11,10 +11,9 @@
  *     optional method 2: use reflect()
  *         best shot: try to reflect every single vector after translating!
  */
-let font
 
 function preload() {
-    font = loadFont('data/meiryo.ttf')
+    // font = loadFont('data/meiryo.ttf')
 }
 
 function setup() {
@@ -23,45 +22,50 @@ function setup() {
 
     noFill()
     stroke(187, 20, 98)
-    strokeWeight(10)
+    strokeWeight(7)
     strokeCap(SQUARE)
     strokeJoin(MITER)
 }
 
-// displays a corner of the textFrame.
-function displayCornerOfFrame() {
+// displays a quadrant of the textFrame.
+function displayFrameQuadrant() {
     // before I use a PGraphics object, I'll draw my frame corner on a blank
     // background.
-    noFill()
-    stroke(187, 20, 98)
-    strokeWeight(10)
-    strokeCap(SQUARE)
-    strokeJoin(MITER)
 
-    beginShape()
-    let firstStrokeStart = new p5.Vector(20, 90)
-    vertex(firstStrokeStart.x, firstStrokeStart.y)
+    // the starting position of my quadrant. I translate to this position later.
+    // The reason why I chose (20, 20) is because I want to have a margin at the
+    // top.
+    const startingPos = new p5.Vector(20, 20)
 
-    let diagonalStart = new p5.Vector(20, 50)
-    vertex(diagonalStart.x, diagonalStart.y)
+    // the side lengths of the 45-45-90 degree triangle in the large diagonal.
+    const r = 10
 
-    let diagonalEnd = new p5.Vector(50, 30)
-    vertex(diagonalEnd.x, diagonalEnd.y)
+    // the number of pixels to shift the diagonal line coordinates so that
+    // it's thicker.
+    const cornerShift = 2
 
-    let thickHorizontalEnd = new p5.Vector(width/4, 30)
-    vertex(thickHorizontalEnd.x, thickHorizontalEnd.y)
+    // the number of pixels to shift the long horizontal line, or the
+    // topmost line, down.
+    const thickBorderShift = cornerShift * sqrt(2)
 
-    strokeWeight(7)
-    let horizontalEnd = new p5.Vector(width/2, 30)
-    vertex(horizontalEnd.x, horizontalEnd.y)
+    // the width of this entire quadrant
+    const quadrantWidth = width / 2 - startingPos.x
 
-    endShape()
+    // the length of the line that makes the long horizontal line thicker.
+    // The reason why I'm dividing by 5 in particular is because the ratio
+    // in the picture I have is around a fifth.
+    const thickLineWidth = quadrantWidth / 5
+
+    // the height of this entire quadrant.
+    const quadrantHeight = height / 6 - startingPos.y
+
+
 }
 
 function draw() {
     background(234, 34, 24)
 
-    displayCornerOfFrame()
+    displayFrameQuadrant()
 }
 
 // prevent the context menu from showing up :3 nya~
