@@ -12,6 +12,20 @@
  *         best shot: try to reflect every single vector after translating!
  */
 
+// the starting position of my quadrant. I translate to this position later.
+// The reason why I chose (20, 20) is because I want to have a margin at the
+// top.
+let startingPos
+
+// the side lengths of the 45-45-90 degree triangle in the large diagonal.
+let r
+
+// the width of this entire quadrant.
+let quadrantWidth
+
+// the height of this entire quadrant.
+let quadrantHeight
+
 let pg, textFrameQuadrant
 
 function preload() {
@@ -28,6 +42,11 @@ function setup() {
     pg.colorMode(HSB, 360, 100, 100, 100)
 
     textFrameQuadrant = displayFrameQuadrant()
+
+    startingPos = new p5.Vector(20, 20)
+    r = 10
+    quadrantWidth = width / 2 - startingPos.x
+    quadrantHeight = height/6 - startingPos.y
 }
 
 // displays a quadrant of the textFrame.
@@ -44,8 +63,7 @@ function displayFrameQuadrant() {
     // it's thicker.
     const cornerShift = 2
 
-    // the number of pixels to shift the long horizontal line, or the
-    // topmost line, down.
+    // the number of pixels to shift the long horizontal (topmost) line down.
     const thickBorderShift = cornerShift * sqrt(2)
 
     // the width of this entire quadrant
@@ -64,7 +82,7 @@ function displayFrameQuadrant() {
 
     pg.noFill()
     pg.stroke(187, 20, 98)
-    pg.strokeWeight(7)
+    pg.strokeWeight(6)
     pg.strokeCap(SQUARE)
     pg.strokeJoin(MITER)
 
@@ -130,6 +148,21 @@ function draw() {
     // image(textFrameQuadrant, 0, 0, width, -height)
     // image(textFrameQuadrant, 0, 0, -width, -height)
 
+    // this displays the rectangle that hides behind the four quadrants. I
+    // need to figure out how to bevel the edges.
+    fill(260, 60, 100, 30)
+    noStroke()
+    strokeJoin(BEVEL)
+    push()
+    translate(startingPos)
+    rect(
+        r/2 - 2, r/2,
+        quadrantWidth * 2 - 4,
+        quadrantHeight * 2 - gapBetweenFrameHalves
+        )
+
+    pop()
+
     // top left quadrant. Does not need a rotation
     push()
     image(textFrameQuadrant, 0, 0)
@@ -138,7 +171,7 @@ function draw() {
     scale(-1, 1)
     image(textFrameQuadrant, -width, 0)
 
-    // bottom left
+    // bottom left. The scale effects multiply with each other
     scale(-1, -1)
     image(textFrameQuadrant, 0, -gapBetweenFrameHalves)
 
