@@ -26,7 +26,8 @@ let quadrantWidth
 // the height of this entire quadrant.
 let quadrantHeight
 
-let pg, textFrameQuadrant
+// frame is our finished text frame!
+let pg, textFrameQuadrant, frame
 
 function preload() {
     // font = loadFont('data/meiryo.ttf')
@@ -37,9 +38,15 @@ function setup() {
     colorMode(HSB, 360, 100, 100, 100)
 
     // the PGraphics object. TODO don't forget the pg.'s!
-    pg = createGraphics(width/2, height/2)
+    pg = createGraphics(width, height)
+
+    // the text frame's graphics initialization
+    frame = createGraphics(width, height/2)
 
     pg.colorMode(HSB, 360, 100, 100, 100)
+
+    // makes my shapes more crisp
+    noSmooth()
 
     textFrameQuadrant = displayFrameQuadrant()
 
@@ -47,6 +54,51 @@ function setup() {
     r = 10
     quadrantWidth = width / 2 - startingPos.x
     quadrantHeight = height/6 - startingPos.y
+
+    // TODO remove minus sign? You can't have a negative distance.
+    let gapBetweenFrameHalves = -200
+
+    // attempts to display the text frame quadrant
+    // image(textFrameQuadrant, 0, 0, width, height)
+    // image(textFrameQuadrant, 0, 0, -width, height)
+    // image(textFrameQuadrant, 0, 0, width, -height)
+    // image(textFrameQuadrant, 0, 0, -width, -height)
+
+    frame.colorMode(HSB, 360, 100, 100, 100)
+
+    // this displays the rectangle that hides behind the four quadrants. I
+    // need to figure out how to bevel the edges.
+    frame.fill(234, 84, 14, 30)
+    frame.noStroke()
+    frame.strokeJoin(BEVEL)
+    frame.push()
+    frame.translate(startingPos)
+    frame.rect(
+        r/2 - 2, r/2 - 2,
+        quadrantWidth * 2 - 4,
+        -gapBetweenFrameHalves - quadrantHeight - 7
+    )
+
+    frame.pop()
+
+    // top left quadrant. Does not need a rotation
+    frame.push()
+    frame.image(textFrameQuadrant, 0, 0)
+
+    // top right
+    frame.scale(-1, 1)
+    frame.image(textFrameQuadrant, -width, 0)
+
+    // bottom left. The scale effects multiply with each other
+    frame.scale(-1, -1)
+    frame.image(textFrameQuadrant, 0, gapBetweenFrameHalves)
+
+    // bottom right
+    frame.scale(-1, 1)
+    frame.image(textFrameQuadrant, -width, gapBetweenFrameHalves)
+    frame.pop()
+
+    save(frame, )
 }
 
 // displays a quadrant of the textFrame.
@@ -54,10 +106,10 @@ function displayFrameQuadrant() {
     // the starting position of my quadrant. I translate to this position later.
     // The reason why I chose (20, 20) is because I want to have a margin at the
     // top.
-    const startingPos = new p5.Vector(20, 20)
+    startingPos = new p5.Vector(20, 20)
 
     // the side lengths of the 45-45-90 degree triangle in the large diagonal.
-    const r = 10
+    r = 10
 
     // the number of pixels to shift the diagonal line coordinates so that
     // it's thicker.
@@ -67,7 +119,7 @@ function displayFrameQuadrant() {
     const thickBorderShift = cornerShift * sqrt(2)
 
     // the width of this entire quadrant
-    const quadrantWidth = width / 2 - startingPos.x
+    quadrantWidth = width / 2 - startingPos.x
 
     // the length of the line that makes the long horizontal line thicker.
     // The reason why I'm dividing by 5 in particular is because the ratio
@@ -75,7 +127,7 @@ function displayFrameQuadrant() {
     const thickLineWidth = quadrantWidth / 5
 
     // the height of this entire quadrant.
-    const quadrantHeight = height / 6 - startingPos.y
+    quadrantHeight = height / 6 - startingPos.y
 
     // the gap closer for the diagonal line
     const gapCloser = 1
@@ -140,6 +192,7 @@ function displayFrameQuadrant() {
 function draw() {
     background(234, 34, 24)
 
+    // TODO remove minus sign? You can't have a negative distance.
     let gapBetweenFrameHalves = -200
 
     // attempts to display the text frame quadrant
@@ -150,15 +203,15 @@ function draw() {
 
     // this displays the rectangle that hides behind the four quadrants. I
     // need to figure out how to bevel the edges.
-    fill(260, 60, 100, 30)
+    fill(234, 84, 14, 30)
     noStroke()
     strokeJoin(BEVEL)
     push()
     translate(startingPos)
     rect(
-        r/2 - 2, r/2,
+        r/2 - 2, r/2 - 2,
         quadrantWidth * 2 - 4,
-        quadrantHeight * 2 - gapBetweenFrameHalves
+        -gapBetweenFrameHalves - quadrantHeight - 7
         )
 
     pop()
@@ -173,11 +226,11 @@ function draw() {
 
     // bottom left. The scale effects multiply with each other
     scale(-1, -1)
-    image(textFrameQuadrant, 0, -gapBetweenFrameHalves)
+    image(textFrameQuadrant, 0, gapBetweenFrameHalves)
 
     // bottom right
     scale(-1, 1)
-    image(textFrameQuadrant, -width, -gapBetweenFrameHalves)
+    image(textFrameQuadrant, -width, gapBetweenFrameHalves)
     pop()
 }
 
