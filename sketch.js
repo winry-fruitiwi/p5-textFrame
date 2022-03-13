@@ -37,11 +37,13 @@ function setup() {
     createCanvas(640, 360)
     colorMode(HSB, 360, 100, 100, 100)
 
+    startingPos = new p5.Vector(20, 20)
+
     // the PGraphics object. TODO don't forget the pg.'s!
     pg = createGraphics(width, height)
 
     // the text frame's graphics initialization
-    frame = createGraphics(width, height/2)
+    frame = createGraphics(width, height)
 
     pg.colorMode(HSB, 360, 100, 100, 100)
 
@@ -50,9 +52,8 @@ function setup() {
 
     textFrameQuadrant = displayFrameQuadrant()
 
-    startingPos = new p5.Vector(20, 20)
-    r = 10
-    quadrantWidth = width / 2 - startingPos.x
+    r = 4
+    quadrantWidth = width/2 - startingPos.x
     quadrantHeight = height/6 - startingPos.y
 
     // TODO remove minus sign? You can't have a negative distance.
@@ -65,6 +66,8 @@ function setup() {
     // image(textFrameQuadrant, 0, 0, -width, -height)
 
     frame.colorMode(HSB, 360, 100, 100, 100)
+
+    frame.translate(0, height/2 - startingPos.y)
 
     // this displays the rectangle that hides behind the four quadrants. I
     // need to figure out how to bevel the edges.
@@ -98,22 +101,21 @@ function setup() {
     frame.image(textFrameQuadrant, -width, gapBetweenFrameHalves)
     frame.pop()
 
-    save(frame, )
+    save(frame, "textFrame.png")
 }
 
 // displays a quadrant of the textFrame.
 function displayFrameQuadrant() {
     // the starting position of my quadrant. I translate to this position later.
-    // The reason why I chose (20, 20) is because I want to have a margin at the
-    // top.
-    startingPos = new p5.Vector(20, 20)
+    // You can adjust this position to get different x and y margins.
+    startingPos = new p5.Vector(50, 20)
 
     // the side lengths of the 45-45-90 degree triangle in the large diagonal.
-    r = 10
+    r = 4
 
     // the number of pixels to shift the diagonal line coordinates so that
     // it's thicker.
-    const cornerShift = 2
+    const cornerShift = 1.1
 
     // the number of pixels to shift the long horizontal (topmost) line down.
     const thickBorderShift = cornerShift * sqrt(2)
@@ -127,14 +129,14 @@ function displayFrameQuadrant() {
     const thickLineWidth = quadrantWidth / 5
 
     // the height of this entire quadrant.
-    quadrantHeight = height / 6 - startingPos.y
+    quadrantHeight = height / 10 - startingPos.y
 
     // the gap closer for the diagonal line
     const gapCloser = 1
 
     pg.noFill()
     pg.stroke(187, 20, 98)
-    pg.strokeWeight(6)
+    pg.strokeWeight(3)
     pg.strokeCap(SQUARE)
     pg.strokeJoin(MITER)
 
@@ -162,7 +164,6 @@ function displayFrameQuadrant() {
     pg.endShape()
 
     pg.stroke(187, 20, 98)
-    pg.strokeWeight(7)
 
     /**
      * this shape makes adjustments to the original text frame quadrant such
@@ -193,7 +194,7 @@ function draw() {
     background(234, 34, 24)
 
     // TODO remove minus sign? You can't have a negative distance.
-    let gapBetweenFrameHalves = -200
+    let gapBetweenFrameHalves = -140
 
     // attempts to display the text frame quadrant
     // image(textFrameQuadrant, 0, 0, width, height)
@@ -210,7 +211,7 @@ function draw() {
     translate(startingPos)
     rect(
         r/2 - 2, r/2 - 2,
-        quadrantWidth * 2 - 4,
+        quadrantWidth * 2,
         -gapBetweenFrameHalves - quadrantHeight - 7
         )
 
